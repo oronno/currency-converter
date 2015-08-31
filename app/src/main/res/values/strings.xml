@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CurrencyConverter</string>
+
+    <string name="USD_title">Enter in USD : </string>
+    <string name="BDT_title">Amount in BDT : </string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Currency Settings</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="ok">OK</string>
+</resources>
