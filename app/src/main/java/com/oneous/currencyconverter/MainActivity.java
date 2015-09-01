@@ -1,4 +1,4 @@
-package com.oneous.currencyconverter.currencyconverter;
+package com.oneous.currencyconverter;
 
 import android.app.Activity;
 import android.content.Intent;
