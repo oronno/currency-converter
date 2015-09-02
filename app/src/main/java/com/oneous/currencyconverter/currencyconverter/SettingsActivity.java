@@ -1,9 +1,9 @@
 package com.oneous.currencyconverter.currencyconverter;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends Activity {
     public static final String EXTRA_CONVERSION_RATE = "conversion_rate";
 
     @Override
