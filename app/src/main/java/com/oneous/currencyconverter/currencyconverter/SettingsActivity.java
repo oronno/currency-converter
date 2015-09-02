@@ -1,6 +1,5 @@
 package com.oneous.currencyconverter.currencyconverter;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,16 +19,21 @@ import java.util.Set;
 
 public class SettingsActivity extends Activity {
     public static final String EXTRA_CONVERSION_RATE = "conversion_rate";
+    public static final String EXTRA_CONVERSION_FROM_CURRENCY = "extra_conversion_from_currency";
+    public static final String EXTRA_CONVERSION_TO_CURRENCY = "extra_conversion_to_currency";
+
+    Spinner fromCurrencySpinner;
+    Spinner toCurrencySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Spinner fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
+        fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
         populateSpinner(fromCurrencySpinner);
 
-        Spinner toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
+        toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
         populateSpinner(toCurrencySpinner);
 
         Button okButton = (Button) findViewById(R.id.ok_button);
@@ -41,6 +45,8 @@ public class SettingsActivity extends Activity {
 
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_CONVERSION_RATE, conversionRate);
+                intent.putExtra(EXTRA_CONVERSION_FROM_CURRENCY, (String) fromCurrencySpinner.getSelectedItem());
+                intent.putExtra(EXTRA_CONVERSION_TO_CURRENCY, (String) toCurrencySpinner.getSelectedItem());
                 setResult(Activity.RESULT_OK, intent);
                 finish();
 

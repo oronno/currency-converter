@@ -15,9 +15,16 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
+
     EditText amountInUsdEditText;
     TextView amountInBdtTextView;
+    TextView fromCurrencyTitleTextView;
+    TextView toCurrencyTitleTextView;
+
+
     private double conversionRate;
+    private String fromCurrency = "FROM Currency";
+    private String toCurrency = "TO Currency";
 
     private static int REQUEST_CODE_FOR_SETTINGS = 1;
 
@@ -27,6 +34,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         amountInUsdEditText = (EditText) findViewById(R.id.amount_in_usd);
         amountInBdtTextView = (TextView) findViewById(R.id.amount_in_bdt);
+        fromCurrencyTitleTextView = (TextView) findViewById(R.id.from_currency_title);
+        toCurrencyTitleTextView = (TextView) findViewById(R.id.to_currency_title);
+        populateTextView();
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -41,10 +51,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                convertUSDtoBDT(s.toString());
+                convertCurrency(s.toString());
             }
         };
         amountInUsdEditText.addTextChangedListener(textWatcher);
+    }
+
+    private void populateTextView() {
+        String formattedText = String.format(getResources().getString(R.string.from_currency_title), fromCurrency);
+        fromCurrencyTitleTextView.setText(formattedText);
+        formattedText = String.format(getResources().getString(R.string.to_currency_title), toCurrency);
+        toCurrencyTitleTextView.setText(formattedText);
     }
 
     @Override
@@ -71,8 +88,11 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_FOR_SETTINGS) {
             if (resultCode == RESULT_OK) {
-                double resultFromSettings = data.getDoubleExtra(SettingsActivity.EXTRA_CONVERSION_RATE, 0.0);
-                conversionRate = resultFromSettings;
+                conversionRate = data.getDoubleExtra(SettingsActivity.EXTRA_CONVERSION_RATE, 0.0);
+                fromCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_FROM_CURRENCY);
+                toCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_TO_CURRENCY);
+                Log.i(TAG, "conversionRate=" + conversionRate + " fromCurrency=" + fromCurrency + " toCurrency=" + toCurrency);
+                populateTextView();
             }
         }
     }
@@ -83,11 +103,11 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, REQUEST_CODE_FOR_SETTINGS);
     }
 
-    public void convertUSDToBDT(View view) {
-        convertUSDtoBDT(amountInUsdEditText.getText().toString());
+    public void convertCurrencyClick(View view) {
+        convertCurrency(amountInUsdEditText.getText().toString());
     }
 
-    private void convertUSDtoBDT(String amount) {
+    private void convertCurrency(String amount) {
         double amountInUsd = 0;
         try {
             amountInUsd = Double.parseDouble(amount);

@@ -13,10 +13,11 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/from_currency_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/USD_title" />
+            android:hint="@string/from_currency_title" />
 
         <EditText
             android:id="@+id/amount_in_usd"
@@ -29,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:onClick="convertUSDToBDT"
+            android:onClick="convertCurrencyClick"
             android:text="Convert" />
     </LinearLayout>
 
@@ -39,10 +40,11 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/to_currency_title"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/BDT_title" />
+            android:text="@string/to_currency_title" />
 
         <TextView
             android:id="@+id/amount_in_bdt"
