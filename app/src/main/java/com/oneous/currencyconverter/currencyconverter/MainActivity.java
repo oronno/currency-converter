@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
     EditText amountInUsdEditText;
     TextView amountInBdtTextView;
