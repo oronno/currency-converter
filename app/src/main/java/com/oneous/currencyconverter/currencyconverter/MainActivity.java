@@ -16,8 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.oneous.currencyconverter.currencyconverter.utils.Constants;
+import com.oneous.currencyconverter.currencyconverter.utils.SharedPreferenceUtils;
+
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
+
     EditText amountInUsdEditText;
     TextView amountInBdtTextView;
 
@@ -30,6 +34,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_main);
         amountInUsdEditText = (EditText) findViewById(R.id.amount_in_usd);
         amountInBdtTextView = (TextView) findViewById(R.id.amount_in_bdt);
@@ -51,14 +56,48 @@ public class MainActivity extends Activity {
             }
         };
         amountInUsdEditText.addTextChangedListener(textWatcher);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+        String conversionRateString = SharedPreferenceUtils.getData(this, Constants.CONVERSION_RATE);
+        if(conversionRateString != null) {
+            conversionRate = Double.parseDouble(conversionRateString);
+        }
+        toCurrency = SharedPreferenceUtils.getData(this, Constants.TO_CURRENCY);
+        fromCurrency = SharedPreferenceUtils.getData(this, Constants.FROM_CURRENCY);
 
         if(conversionRate == 0.0 && toCurrency == null && fromCurrency == null) {
             startSettingsActivity();
+            return;
         }
+        populateView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -67,6 +106,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_settings:
@@ -74,18 +114,6 @@ public class MainActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_FOR_SETTINGS) {
-            if (resultCode == RESULT_OK) {
-                conversionRate = data.getDoubleExtra(SettingsActivity.EXTRA_CONVERSION_RATE, 0.0);
-                toCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_TO_CURRENCY);
-                fromCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_FROM_CURRENCY);
-                populateView();
-            }
         }
     }
 
@@ -103,7 +131,7 @@ public class MainActivity extends Activity {
 
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_FOR_SETTINGS);
+        startActivity(intent);
     }
 
     public void convertUSDToBDT(View view) {
