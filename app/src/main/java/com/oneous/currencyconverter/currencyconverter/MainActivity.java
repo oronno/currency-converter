@@ -16,11 +16,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
     EditText amountInUsdEditText;
     TextView amountInBdtTextView;
+
     private double conversionRate;
+    private String toCurrency;
+    private String fromCurrency;
 
     private static int REQUEST_CODE_FOR_SETTINGS = 1;
 
@@ -48,6 +51,10 @@ public class MainActivity extends ActionBarActivity {
             }
         };
         amountInUsdEditText.addTextChangedListener(textWatcher);
+
+        if(conversionRate == 0.0 && toCurrency == null && fromCurrency == null) {
+            startSettingsActivity();
+        }
     }
 
     @Override
@@ -74,10 +81,23 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_FOR_SETTINGS) {
             if (resultCode == RESULT_OK) {
-                double resultFromSettings = data.getDoubleExtra(SettingsActivity.EXTRA_CONVERSION_RATE, 0.0);
-                conversionRate = resultFromSettings;
+                conversionRate = data.getDoubleExtra(SettingsActivity.EXTRA_CONVERSION_RATE, 0.0);
+                toCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_TO_CURRENCY);
+                fromCurrency = data.getStringExtra(SettingsActivity.EXTRA_CONVERSION_FROM_CURRENCY);
+                populateView();
             }
         }
+    }
+
+    private void populateView() {
+        TextView fromCurrencyTextView = (TextView) findViewById(R.id.from_currency_title);
+        TextView toCurrencyTextView = (TextView) findViewById(R.id.to_currency_title);
+
+        String from = getResources().getString(R.string.from_currency_title);
+        fromCurrencyTextView.setText(String.format(from, fromCurrency));
+
+        String to = getResources().getString(R.string.to_currency_title);
+        toCurrencyTextView.setText(String.format(to, toCurrency));
     }
 
 

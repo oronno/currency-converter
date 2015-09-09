@@ -3,12 +3,12 @@ package com.oneous.currencyconverter.currencyconverter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,18 +18,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends Activity {
     public static final String EXTRA_CONVERSION_RATE = "conversion_rate";
+    public static final String EXTRA_CONVERSION_FROM_CURRENCY = "extra_conversion_from_currency";
+    public static final String EXTRA_CONVERSION_TO_CURRENCY = "extra_conversion_to_currency";
+
+    Spinner fromCurrencySpinner;
+    Spinner toCurrencySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Spinner fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
+        fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
         populateSpinner(fromCurrencySpinner);
 
-        Spinner toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
+        toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
         populateSpinner(toCurrencySpinner);
 
         Button okButton = (Button) findViewById(R.id.ok_button);
@@ -37,10 +42,27 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 EditText currencyRateET = (EditText) findViewById(R.id.currencyRateET);
-                double conversionRate = Double.parseDouble(currencyRateET.getText().toString());
+                String currencyRateString = currencyRateET.getText().toString();
+                if(currencyRateString.equals("")) {
+                    currencyRateET.setError("Required");
+                    return;
+                }
+
+                String toCurrencyString = String.valueOf(toCurrencySpinner.getSelectedItem());
+                String fromCurrencyString = String.valueOf(fromCurrencySpinner.getSelectedItem());
+                if(toCurrencyString.equals(fromCurrencyString)) {
+                    Toast.makeText(SettingsActivity.this, "From & To Currency can't be equal", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                double conversionRate = Double.parseDouble(currencyRateString);
 
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_CONVERSION_RATE, conversionRate);
+
+                intent.putExtra(EXTRA_CONVERSION_FROM_CURRENCY, fromCurrencyString);
+
+                intent.putExtra(EXTRA_CONVERSION_TO_CURRENCY, toCurrencyString);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
 
