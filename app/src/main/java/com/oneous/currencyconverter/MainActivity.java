@@ -1,4 +1,4 @@
-package com.oneous.currencyconverter.currencyconverter;
+package com.oneous.currencyconverter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.oneous.currencyconverter.currencyconverter.utils.Constants;
-import com.oneous.currencyconverter.currencyconverter.utils.SharedPreferenceUtils;
+import com.oneous.currencyconverter.utils.Constants;
+import com.oneous.currencyconverter.utils.SharedPreferenceUtils;
 
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";

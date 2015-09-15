@@ -1,4 +1,4 @@
-package com.oneous.currencyconverter.currencyconverter.utils;
+package com.oneous.currencyconverter.utils;
 
 /**
  * Created by INSTRUCTOR on 9/9/2015.

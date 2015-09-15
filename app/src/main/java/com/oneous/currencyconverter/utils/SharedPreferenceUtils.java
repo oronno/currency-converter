@@ -1,4 +1,4 @@
-package com.oneous.currencyconverter.currencyconverter.utils;
+package com.oneous.currencyconverter.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
