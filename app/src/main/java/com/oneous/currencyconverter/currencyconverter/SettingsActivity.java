@@ -2,6 +2,7 @@ package com.oneous.currencyconverter.currencyconverter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.oneous.currencyconverter.currencyconverter.utils.Constants;
+import com.oneous.currencyconverter.currencyconverter.utils.SharedPreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,10 +23,6 @@ import java.util.Locale;
 import java.util.Set;
 
 public class SettingsActivity extends Activity {
-    public static final String EXTRA_CONVERSION_RATE = "conversion_rate";
-    public static final String EXTRA_CONVERSION_FROM_CURRENCY = "extra_conversion_from_currency";
-    public static final String EXTRA_CONVERSION_TO_CURRENCY = "extra_conversion_to_currency";
-
     Spinner fromCurrencySpinner;
     Spinner toCurrencySpinner;
 
@@ -55,17 +55,10 @@ public class SettingsActivity extends Activity {
                     return;
                 }
 
-                double conversionRate = Double.parseDouble(currencyRateString);
-
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_CONVERSION_RATE, conversionRate);
-
-                intent.putExtra(EXTRA_CONVERSION_FROM_CURRENCY, fromCurrencyString);
-
-                intent.putExtra(EXTRA_CONVERSION_TO_CURRENCY, toCurrencyString);
-                setResult(Activity.RESULT_OK, intent);
+                SharedPreferenceUtils.saveData(SettingsActivity.this, Constants.CONVERSION_RATE, currencyRateString);
+                SharedPreferenceUtils.saveData(SettingsActivity.this, Constants.FROM_CURRENCY, fromCurrencyString);
+                SharedPreferenceUtils.saveData(SettingsActivity.this, Constants.TO_CURRENCY, toCurrencyString);
                 finish();
-
             }
         });
     }
