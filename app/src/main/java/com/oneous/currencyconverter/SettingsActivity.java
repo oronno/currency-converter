@@ -1,8 +1,6 @@
 package com.oneous.currencyconverter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,6 +23,7 @@ import java.util.Set;
 public class SettingsActivity extends Activity {
     Spinner fromCurrencySpinner;
     Spinner toCurrencySpinner;
+    EditText currencyRateET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +36,24 @@ public class SettingsActivity extends Activity {
         toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
         populateSpinner(toCurrencySpinner);
 
+
+        currencyRateET = (EditText) findViewById(R.id.currencyRateET);
+
+        restoreFromPref();
+
         Button okButton = (Button) findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText currencyRateET = (EditText) findViewById(R.id.currencyRateET);
                 String currencyRateString = currencyRateET.getText().toString();
-                if(currencyRateString.equals("")) {
+                if (currencyRateString.equals("")) {
                     currencyRateET.setError("Required");
                     return;
                 }
 
                 String toCurrencyString = String.valueOf(toCurrencySpinner.getSelectedItem());
                 String fromCurrencyString = String.valueOf(fromCurrencySpinner.getSelectedItem());
-                if(toCurrencyString.equals(fromCurrencyString)) {
+                if (toCurrencyString.equals(fromCurrencyString)) {
                     Toast.makeText(SettingsActivity.this, "From & To Currency can't be equal", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -61,6 +64,26 @@ public class SettingsActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    private void restoreFromPref() {
+        String conversionRateString = SharedPreferenceUtils.getData(this, Constants.CONVERSION_RATE);
+        String toCurrency = SharedPreferenceUtils.getData(this, Constants.TO_CURRENCY);
+        String fromCurrency = SharedPreferenceUtils.getData(this, Constants.FROM_CURRENCY);
+
+        currencyRateET.setText(conversionRateString);
+        restoreSpinnerSelection(toCurrencySpinner, toCurrency);
+        restoreSpinnerSelection(fromCurrencySpinner, fromCurrency);
+    }
+
+    private void restoreSpinnerSelection(Spinner currencySpinner, String currencyString) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) currencySpinner.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).equals(currencyString)) {
+                currencySpinner.setSelection(i);
+                return;
+            }
+        }
     }
 
     private void populateSpinner(Spinner sprinner) {
